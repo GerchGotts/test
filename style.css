@@ -120,7 +120,7 @@ body::before {
   background-color: var(--color-bg);
 
   /* Для дня убираем осветление */
-  filter: brightness(1.75);
+  filter: brightness(1.4);
 }
 /* затемняющий оверлей для читаемости */
 body::after {
