@@ -137,11 +137,7 @@ body::after {
 
 /* День */
 [data-theme="light"] body::after {
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,.08) 0%,
-    rgba(255,248,220,.12) 100%
-  );
+  background: rgba(255,255,255,0.08);
 }
 
 html, body {
