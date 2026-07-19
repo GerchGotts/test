@@ -1667,3 +1667,272 @@ blockquote {
     padding: 14px 16px;
   }
 }
+/* ===== Mobile override for GAP ===== */
+@media (max-width: 900px) {
+  .container {
+    width: calc(100% - 24px);
+    padding-inline: 0;
+  }
+
+  .header__inner {
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 64px;
+    padding: 10px 0;
+  }
+
+  .brand {
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .brand__logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .header__actions,
+  .nav__cta {
+    display: none;
+  }
+
+  .nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--color-border-strong);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-pixel-sm);
+    position: relative;
+    z-index: 60;
+  }
+
+  .nav__toggle-bar {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--color-text);
+    position: relative;
+  }
+
+  .nav__toggle-bar::before,
+  .nav__toggle-bar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 2px;
+    background: var(--color-text);
+  }
+
+  .nav__toggle-bar::before {
+    top: -6px;
+  }
+
+  .nav__toggle-bar::after {
+    top: 6px;
+  }
+
+  .nav {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    right: 0;
+    display: none;
+    padding: 12px;
+    background: color-mix(in srgb, var(--color-bg) 96%, transparent);
+    border-bottom: 3px solid var(--color-border);
+    backdrop-filter: blur(8px);
+    z-index: 55;
+  }
+
+  .nav[data-open="true"] {
+    display: block;
+  }
+
+  .nav__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .nav__link {
+    display: block;
+    padding: 14px 16px;
+    font-size: 11px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-pixel-sm);
+  }
+
+  .hero {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .hero__title {
+    font-size: clamp(40px, 18vw, 72px);
+  }
+
+  .hero__stark,
+  .hero__subtitle,
+  .hero__text,
+  .season-subtitle,
+  .chapter p,
+  .race-card__subtitle,
+  .staff-card__desc,
+  .about-card p,
+  .mode-card p,
+  .rule p,
+  .step p {
+    font-size: 20px;
+    line-height: 1.5;
+  }
+
+  .hero__cta,
+  .community__cta,
+  .join__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero__cta .btn,
+  .community__cta .btn,
+  .join__actions .btn {
+    width: 100%;
+  }
+
+  .about__cards,
+  .modes__grid,
+  .team__grid,
+  .chronicles-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .race-card {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 14px;
+  }
+
+  .race-card__image {
+    order: 1;
+  }
+
+  .race-card__content {
+    order: 2;
+  }
+
+  .race-card__content h2 {
+    font-size: 22px;
+  }
+
+  .race-card__content h3,
+  .race-card__content h4 {
+    font-size: 17px;
+  }
+
+  .race-stats {
+    gap: 8px;
+  }
+
+  .race-stats li {
+    padding: 8px 0;
+    font-size: 20px;
+  }
+
+  .chapter {
+    padding: 16px;
+  }
+
+  blockquote {
+    margin: 18px 0;
+    padding: 14px 16px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .container {
+    width: calc(100% - 16px);
+  }
+
+  .header__inner {
+    min-height: 60px;
+    padding: 8px 0;
+  }
+
+  .brand {
+    font-size: 12px;
+  }
+
+  .nav {
+    top: 60px;
+    padding: 10px;
+  }
+
+  .nav__link {
+    font-size: 10px;
+    padding: 12px 14px;
+  }
+
+  .section,
+  .hero {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  .section__title {
+    font-size: clamp(22px, 7vw, 32px);
+  }
+
+  .hero__title {
+    font-size: clamp(36px, 20vw, 60px);
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 10px;
+  }
+
+  .race-card,
+  .about-card,
+  .mode-card,
+  .staff-card,
+  .chronicle-card,
+  .chapter {
+    padding: 14px;
+  }
+
+  .race-card__image img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Optional: smoother open/close if JS toggles data-open */
+.nav {
+  transition: opacity 160ms steps(4), transform 160ms steps(4);
+}
+
+.nav[data-open="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .nav {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  .nav[data-open="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
