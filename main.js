@@ -46,10 +46,7 @@
 
   var savedTheme = storeGet(THEME_KEY);
   if (!savedTheme) {
-    savedTheme = window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: light)").matches
-      ? "light"
-      : "dark";
+    savedTheme = "dark";
   }
   applyTheme(savedTheme);
 
