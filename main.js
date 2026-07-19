@@ -190,4 +190,3 @@
     checkServerStatus();
     setInterval(checkServerStatus, 60000);
   }
-})();
