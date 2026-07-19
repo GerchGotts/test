@@ -93,12 +93,6 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-base);
   line-height: 1.55;
-  color: var(--color-text);
-  background-color: var(--color-bg);
-  overflow-x: hidden;
-  image-rendering: pixelated;
-  -webkit-font-smoothing: none;
-  position: relative;
   color: var(--color-text) !important;
 }
 /* ===== Ночной хвойный лес / дневной луг ===== */
