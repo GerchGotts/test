@@ -99,21 +99,6 @@ body {
   image-rendering: pixelated;
   -webkit-font-smoothing: none;
   position: relative;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-span,
-li,
-strong,
-small,
-label,
-a {
   color: var(--color-text) !important;
 }
 /* ===== Ночной хвойный лес / дневной луг ===== */
