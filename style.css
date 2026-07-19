@@ -105,17 +105,23 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -2;
+
   background: url("img/forest-night.png") center center / cover no-repeat;
   background-color: var(--color-bg);
+
   pointer-events: none;
-  filter: brightness(2);
+
+  /* Только немного осветляем ночь */
+  filter: brightness(1.25);
 }
 
 [data-theme="light"] body::before {
   background: url("img/meadow-day.png") center center / cover no-repeat;
   background-color: var(--color-bg);
-}
 
+  /* Для дня убираем осветление */
+  filter: brightness(1);
+}
 /* затемняющий оверлей для читаемости */
 body::after {
   content: "";
