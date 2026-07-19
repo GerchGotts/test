@@ -107,14 +107,12 @@ body::before {
   z-index: -2;
   background: url("img/forest-night.png") center center / cover no-repeat;
   background-color: var(--color-bg);
-  filter: brightness(1.55);
   pointer-events: none;
 }
 
 [data-theme="light"] body::before {
   background: url("img/meadow-day.png") center center / cover no-repeat;
   background-color: var(--color-bg);
-  filter: brightness(1);
 }
 
 /* затемняющий оверлей для читаемости */
@@ -125,9 +123,9 @@ body::after {
   z-index: -1;
   background: linear-gradient(
     180deg,
-    rgba(8, 10, 8, 0.82) 0%,
-    rgba(8, 10, 8, 0.88) 50%,
-    rgba(8, 10, 8, 0.93) 100%
+    rgba(18, 20, 18, 0.35) 0%,
+    rgba(18, 20, 18, 0.45) 50%,
+    rgba(18, 20, 18, 0.55) 100%
   );
   pointer-events: none;
 }
@@ -135,8 +133,8 @@ body::after {
 [data-theme="light"] body::after {
   background: linear-gradient(
     180deg,
-    rgba(207, 196, 168, 0.74) 0%,
-    rgba(207, 196, 168, 0.84) 100%
+    rgba(207, 196, 168, 0.28) 0%,
+    rgba(207, 196, 168, 0.40) 100%
   );
 }
 
