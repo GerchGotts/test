@@ -475,7 +475,7 @@ p, li {
   font-family: var(--font-body);
   font-size: 1.4rem;
   line-height: 1.6;
-  color: #cabfa6;
+color: var(--color-text);
 }
 
 .hero__stark {
