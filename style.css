@@ -107,7 +107,7 @@ body::before {
   z-index: -2;
   background: url("img/forest-night.png") center center / cover no-repeat;
   background-color: var(--color-bg);
-  filter: brightness(1.25);
+  filter: brightness(1.55);
   pointer-events: none;
 }
 
