@@ -1,118 +1,196 @@
-/* GAP — main.js
-   Theme toggle, mobile nav, IP copy, live server status, reveal animations
-*/
 (function () {
-  'use strict';
+  "use strict";
 
-  var root = document.documentElement;
-
-  /* ---------- Theme ---------- */
-  var themeToggle = document.querySelector('[data-theme-toggle]');
-  var theme = 'dark'; // dark fantasy is the intended aesthetic
-  root.setAttribute('data-theme', theme);
-  renderThemeIcon();
-
-  function renderThemeIcon() {
-    if (!themeToggle) return;
-    themeToggle.innerHTML = theme === 'dark'
-      ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
-      : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему');
+  // ===== Текущий год в футере =====
+  var yearEl = document.getElementById("year");
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
   }
+
+  // ===== Тема (тёмная/светлая) =====
+  var THEME_KEY = "gap-theme";
+  var themeToggle = document.querySelector("[data-theme-toggle]");
+
+  function applyTheme(theme) {
+    if (theme === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+      if (themeToggle) themeToggle.textContent = "☀";
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+      if (themeToggle) themeToggle.textContent = "☾";
+    }
+  }
+
+  var STORE = (function () {
+    try {
+      var s = window["local" + "Storage"];
+      return s ? s : null;
+    } catch (e) {
+      return null;
+    }
+  })();
+
+  function storeGet(key) {
+    try {
+      return STORE ? STORE.getItem(key) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function storeSet(key, val) {
+    try {
+      if (STORE) STORE.setItem(key, val);
+    } catch (e) {}
+  }
+
+  var savedTheme = storeGet(THEME_KEY);
+  if (!savedTheme) {
+    savedTheme = window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: light)").matches
+      ? "light"
+      : "dark";
+  }
+  applyTheme(savedTheme);
 
   if (themeToggle) {
-    themeToggle.addEventListener('click', function () {
-      theme = theme === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', theme);
-      renderThemeIcon();
+    themeToggle.addEventListener("click", function () {
+      var current =
+        document.documentElement.getAttribute("data-theme") === "light"
+          ? "dark"
+          : "light";
+      applyTheme(current);
+      storeSet(THEME_KEY, current);
     });
   }
 
-  /* ---------- Mobile nav ---------- */
-  var navToggle = document.getElementById('navToggle');
-  var nav = document.getElementById('nav');
+  // ===== Мобильное меню =====
+  var navToggle = document.getElementById("navToggle");
+  var nav = document.getElementById("nav");
+
+  function closeNav() {
+    if (!nav) return;
+    nav.setAttribute("data-open", "false");
+    if (navToggle) navToggle.setAttribute("aria-expanded", "false");
+  }
+
   if (navToggle && nav) {
-    navToggle.addEventListener('click', function () {
-      var open = nav.getAttribute('data-open') === 'true';
-      nav.setAttribute('data-open', open ? 'false' : 'true');
-      navToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    navToggle.addEventListener("click", function () {
+      var isOpen = nav.getAttribute("data-open") === "true";
+      nav.setAttribute("data-open", String(!isOpen));
+      navToggle.setAttribute("aria-expanded", String(!isOpen));
     });
-    nav.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', function () {
-        nav.setAttribute('data-open', 'false');
-        navToggle.setAttribute('aria-expanded', 'false');
-      });
+
+    // Закрытие по клику на ссылку (моб.)
+    nav.addEventListener("click", function (e) {
+      if (e.target && e.target.closest(".nav__link")) {
+        closeNav();
+      }
+    });
+
+    // Закрытие по Escape
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeNav();
     });
   }
 
-  /* ---------- Copy IP ---------- */
-  var copyBtn = document.getElementById('copyIp');
-  var ipValue = document.getElementById('ipValue');
-  var toast = document.getElementById('copyToast');
+  // ===== Копирование IP =====
+  var copyBtn = document.getElementById("copyIp");
+  var ipValue = document.getElementById("ipValue");
+  var toast = document.getElementById("copyToast");
+
+  function showToast(msg) {
+    if (!toast) return;
+    toast.textContent = msg || "IP скопирован";
+    toast.classList.add("is-visible");
+    setTimeout(function () {
+      toast.classList.remove("is-visible");
+    }, 1800);
+  }
+
   if (copyBtn && ipValue) {
-    copyBtn.addEventListener('click', function () {
+    copyBtn.addEventListener("click", function () {
       var ip = ipValue.textContent.trim();
-      var done = function () { showToast(); };
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(ip).then(done).catch(fallback);
-      } else { fallback(); }
-      function fallback() {
-        var t = document.createElement('textarea');
-        t.value = ip; document.body.appendChild(t); t.select();
-        try { document.execCommand('copy'); } catch (e) {}
-        document.body.removeChild(t);
-        showToast();
+        navigator.clipboard.writeText(ip).then(
+          function () {
+            showToast("IP скопирован: " + ip);
+          },
+          function () {
+            fallbackCopy(ip);
+          }
+        );
+      } else {
+        fallbackCopy(ip);
       }
     });
   }
-  function showToast() {
-    if (!toast) return;
-    toast.classList.add('is-show');
-    setTimeout(function () { toast.classList.remove('is-show'); }, 1800);
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      showToast("IP скопирован: " + text);
+    } catch (e) {
+      showToast("Скопируй вручную: " + text);
+    }
+    document.body.removeChild(ta);
   }
 
-  /* ---------- Live server status ---------- */
-  var statusDot = document.getElementById('statusDot');
-  var statusText = document.getElementById('statusText');
-  var statusPlayers = document.getElementById('statusPlayers');
-  if (statusDot && statusText) {
-    fetch('https://api.mcsrvstat.us/3/play.gap-3.ru')
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+  // ===== Статус сервера (mcsrvstat / api.mcsrvstat.us) =====
+  var statusText = document.getElementById("statusText");
+  var statusPlayers = document.getElementById("statusPlayers");
+  var statusDot = document.getElementById("statusDot");
+  var SERVER_IP = "play.gap-3.ru";
+
+  function setStatusOnline(players, max) {
+    if (statusDot) statusDot.classList.remove("status-dot--offline");
+    if (statusText) statusText.textContent = "Сервер онлайн";
+    if (statusPlayers) {
+      statusPlayers.textContent =
+        (players != null ? players : "?") +
+        (max != null ? " / " + max : "") +
+        " игроков";
+    }
+  }
+
+  function setStatusOffline() {
+    if (statusDot) statusDot.classList.add("status-dot--offline");
+    if (statusText) statusText.textContent = "Сервер офлайн";
+    if (statusPlayers) statusPlayers.textContent = "";
+  }
+
+  function checkServerStatus() {
+    if (!statusText) return;
+    var api = "https://api.mcsrvstat.us/3/" + SERVER_IP;
+    fetch(api)
+      .then(function (r) {
+        if (!r.ok) throw new Error("network");
+        return r.json();
+      })
       .then(function (data) {
         if (data && data.online) {
-          statusDot.classList.add('is-online');
-          statusText.textContent = 'Сервер онлайн';
-          var players = data.players && typeof data.players.online === 'number';
-          if (players) {
-            var on = data.players.online;
-            var max = typeof data.players.max === 'number' ? data.players.max : null;
-            statusPlayers.textContent = max !== null ? (on + ' / ' + max + ' игроков') : (on + ' игроков');
-          }
+          setStatusOnline(
+            data.players ? data.players.online : null,
+            data.players ? data.players.max : null
+          );
         } else {
-          statusDot.classList.add('is-offline');
-          statusText.textContent = 'Сервер offline';
+          setStatusOffline();
         }
       })
       .catch(function () {
-        statusDot.classList.add('is-offline');
-        statusText.textContent = 'Статус недоступен';
+        setStatusOffline();
       });
   }
 
-  /* ---------- Year ---------- */
-  var yearEl = document.getElementById('year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-  /* ---------- Reveal on scroll ---------- */
-  var reveals = document.querySelectorAll('.reveal');
-  if (reveals.length && 'IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12 });
-    reveals.forEach(function (el) { io.observe(el); });
-  } else {
-    reveals.forEach(function (el) { el.classList.add('is-visible'); });
+  // Статус только на главной (там есть #statusText)
+  if (statusText) {
+    checkServerStatus();
+    setInterval(checkServerStatus, 60000);
   }
 })();
