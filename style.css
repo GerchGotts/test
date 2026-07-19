@@ -108,6 +108,7 @@ body::before {
   background: url("img/forest-night.png") center center / cover no-repeat;
   background-color: var(--color-bg);
   pointer-events: none;
+  filter: brightness(2);
 }
 
 [data-theme="light"] body::before {
