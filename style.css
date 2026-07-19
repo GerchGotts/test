@@ -47,8 +47,7 @@
   --radius: 0;
   --transition: 140ms steps(4);
 }
-
-[data-theme="light"] {
+:root[data-theme="light"] {
   --color-bg: #cfc4a8;
   --color-bg-2: #c8bca0;
   --color-surface: #ddd2b2;
@@ -71,7 +70,6 @@
   --color-ember: #a8531a;
   --color-online: #3f5a26;
 }
-
 *,
 *::before,
 *::after {
