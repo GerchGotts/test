@@ -112,7 +112,7 @@ body::before {
   pointer-events: none;
 
   /* Только немного осветляем ночь */
-  filter: brightness(1.25);
+  filter: brightness(2);
 }
 
 [data-theme="light"] body::before {
